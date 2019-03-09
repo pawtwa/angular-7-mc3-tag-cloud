@@ -6,7 +6,31 @@
   </mat-toolbar>
   <div class="container">
     <mat-card>
-      
+      <mat-grid-list cols="2" rowHeight="100px">
+        <mat-grid-tile
+            colspan="1"
+            rowspan="5"
+        >
+          <form class="full-width">
+              <mat-form-field class="full-width">
+                  <textarea 
+                    #textarea
+                    [(ngModel)]='text'
+                    [ngModelOptions]="{standalone: true}"
+                    matInput 
+                    placeholder="Leave a text to generate Tag Cloud from its words"
+                    rows="20"
+                  ></textarea>
+              </mat-form-field>
+          </form>
+        </mat-grid-tile>
+        <mat-grid-tile
+            colspan="1"
+            rowspan="5"
+        >
+          <div class="tag-cloud" #tagCloud></div>
+        </mat-grid-tile>
+      </mat-grid-list>
     </mat-card>
   </div>
 </div>

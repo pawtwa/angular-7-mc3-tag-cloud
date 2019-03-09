@@ -1,0 +1,9 @@
+.full-width {
+    width: 100%;
+}
+
+.tag-cloud {
+    overflow: auto; 
+    height: 100%; 
+    width: 100%;
+}
