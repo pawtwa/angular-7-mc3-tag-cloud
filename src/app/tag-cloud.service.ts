@@ -9,14 +9,23 @@ export class TagCloudService {
 
   private generateTagCloudFromText(text: string): Object {
     text = text.replace(/[^A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9]/g, ' ');
-    let helper = {tags: null, stats: {countMax: 0, countMin: 0}};
+    let helper = {tags: null, words: null, stats: {countMax: 0, countMin: 0}};
     let items = {};
     let initialValue = [];
-    const tags = text.split(' ').filter((value) => value.length).sort().reduce<Object>((pV, cV, cI, arr) => {
+    let words = { };
+    const tags = text.split(' ').filter((value) => value.length)/*.sort()*/.reduce<Object>((pV, cV, cI, arr) => {
       cV = cV.toLocaleLowerCase();
       if (!items[cV]) {
         items[cV] = initialValue.length;
       }
+      (() => {
+        if (!words[cV.length] && cV.length > 2) {
+          words[cV.length] = {
+            word: cV,
+            fontSize: Math.floor(Math.random() * 52) + 12
+          }
+        }
+      })();
       !initialValue[items[cV]]
         ? (initialValue.push({tag: cV, count: 1, url: `#${cV}`})) 
         : initialValue[items[cV]].count++;
@@ -29,6 +38,7 @@ export class TagCloudService {
       return initialValue;
     }, initialValue);
     helper.tags = tags;
+    helper.words = words;
     return helper;
   }
 
