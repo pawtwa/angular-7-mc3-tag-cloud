@@ -1,3 +1,10 @@
+export interface WordsInterface {
+    [length: number]: {
+        word: string,
+        fontSize: number
+    }
+  }
+
 export default {
     3: {word: "gdy", fontSize: 35},
     4: {word: "lata", fontSize: 46},

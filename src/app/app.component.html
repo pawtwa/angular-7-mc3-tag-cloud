@@ -5,18 +5,26 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <div class="container">
-    <mat-card>
-      <mat-grid-list cols="2" rowHeight="100px">
+        <mat-card>
+      <mat-grid-list cols="2" rowHeight="80px">
         <mat-grid-tile
             colspan="1"
             rowspan="5"
         >
-          <div class="tag-cloud" #tagCloud></div>
+          <mat-list>
+              <mat-list-item *ngFor="let taskRequirement of taskRequirements"><mat-icon>arrow_forward</mat-icon> &nbsp; {{ taskRequirement }}</mat-list-item>
+          </mat-list>
         </mat-grid-tile>
         <mat-grid-tile
             colspan="1"
             rowspan="5"
         >
+          <mat-chip-list *ngIf="error">
+            <mat-chip color="accent" selected>{{ error }}</mat-chip>
+          </mat-chip-list>
+          <div class="tag-cloud" #tagCloud *ngIf="words">
+            <span *ngFor="let wordLength of words | objectKeys" [ngStyle]="{'font-size': words[wordLength].fontSize + 'px', 'cursor': 'pointer'}" (click)="onWordClick($event, words[wordLength].word)"> {{ words[wordLength].word }} </span>
+          </div>
         </mat-grid-tile>
       </mat-grid-list>
     </mat-card>

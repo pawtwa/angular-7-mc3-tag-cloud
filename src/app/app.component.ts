@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { UiService } from './ui.service';
-import { NgModel } from '@angular/forms';
-import { Observable, fromEvent, Subscription, timer } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
+
 import { TagCloudService } from './tag-cloud.service';
+import { UiService } from './ui.service';
+
+import taskRequirements from '../assets/task-requirements';
+import { WordsInterface } from '../assets/words';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +20,53 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild('tagCloud') tags: ElementRef<HTMLBaseElement>;
 
+  words: Object;
+  private getWordsSubscription: Subscription;
+
+  taskRequirements: string[];
+  error: string;
+
+  private delay: number = 1000;
+
   constructor(
-    private ui: UiService,
-    private tagCloudService: TagCloudService
-  ) { }
+    private tagCloudService: TagCloudService,
+    private ui: UiService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    timer(0).subscribe((_) => {
+      this.showLoader();
+      this.taskRequirements = taskRequirements;
+      this.getWordsSubscription = this.tagCloudService.getWords().subscribe(
+        (response: WordsInterface) => {
+          timer(this.delay).subscribe((_) => {
+            this.words = response;
+            this.hideLoader();
+          });
+        },
+        (error) => {
+          timer(this.delay).subscribe((_) => {
+            this.error = error;
+            this.hideLoader();
+          });
+        }
+      );
+    });
+  }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    this.getWordsSubscription ? this.getWordsSubscription.unsubscribe() : null;
+  }
+
+  onWordClick(event: Event, word: string) {
+    alert(word);
+  }
+
+  private showLoader() {
+    this.ui.spin$.next(true);
+  }
+
+  private hideLoader() {
+    this.ui.spin$.next(false);
+  }
 }
