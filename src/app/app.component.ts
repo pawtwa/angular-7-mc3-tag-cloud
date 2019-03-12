@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 
 import { TagCloudService } from './tag-cloud.service';
 import { UiService } from './ui.service';
 
 import taskRequirements from '../assets/task-requirements';
 import { WordsInterface } from '../assets/words';
+import { BottomSheetTagCloudDoneComponent } from './bottom-sheet-tag-cloud-done/bottom-sheet-tag-cloud-done.component';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +33,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private tagCloudService: TagCloudService,
-    private ui: UiService
+    private ui: UiService,
+    private snackBar: MatSnackBar,
+    private bottomSheet: MatBottomSheet
   ) {}
 
   ngOnInit() {
@@ -42,12 +47,14 @@ export class AppComponent implements OnInit, OnDestroy {
           timer(this.delay).subscribe((_) => {
             this.words = response;
             this.hideLoader();
+            this.openBottomSheet();
           });
         },
         (error) => {
           timer(this.delay).subscribe((_) => {
             this.error = error;
             this.hideLoader();
+            this.openSnackBar(error);
           });
         }
       );
@@ -60,6 +67,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onWordClick(event: Event, word: string) {
     alert(word);
+  }
+
+  openSnackBar(message: string, action: string = 'OK') {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
+
+  openBottomSheet() {
+    this.bottomSheet.open(BottomSheetTagCloudDoneComponent);
   }
 
   private showLoader() {
