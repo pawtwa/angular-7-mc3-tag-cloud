@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "ng build --base-href=\"/angular-7-mc3-tag-cloud/\" --deploy-url=\"\" && gh-pages -d dist/mc3-tag-cloud"
+    "deploy": "ng build --prod --base-href=\"/angular-7-mc3-tag-cloud/\" --deploy-url=\"\" && gh-pages -d dist/mc3-tag-cloud"
   },
   "private": true,
   "dependencies": {

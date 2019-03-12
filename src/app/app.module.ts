@@ -33,7 +33,7 @@ registerLocaleData(localePl, 'pl');
     { provide: LOCALE_ID, useValue: 'pl' },
     UiService
   ],
-  entryComponents: [ MatSpinner  ],
+  entryComponents: [ MatSpinner ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
