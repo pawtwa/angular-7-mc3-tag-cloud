@@ -29,7 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
   taskRequirements: string[];
   error: string;
 
-  private delay: number = 1000;
+  private delayAfterGetWords: number = 500;
+  private delayDialogs: number = 2000;
 
   constructor(
     private tagCloudService: TagCloudService,
@@ -39,19 +40,29 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.generateTagCloud();
+  }
+
+  ngOnDestroy() {
+    this.getWordsSubscription ? this.getWordsSubscription.unsubscribe() : null;
+  }
+
+  generateTagCloud() {
+    this.words = null;
+    this.error = null;
     timer(0).subscribe((_) => {
       this.showLoader();
       this.taskRequirements = taskRequirements;
       this.getWordsSubscription = this.tagCloudService.getWords().subscribe(
         (response: WordsInterface) => {
-          timer(this.delay).subscribe((_) => {
+          timer(this.delayAfterGetWords).subscribe((_) => {
             this.words = response;
             this.hideLoader();
             this.openBottomSheet();
           });
         },
         (error) => {
-          timer(this.delay).subscribe((_) => {
+          timer(this.delayAfterGetWords).subscribe((_) => {
             this.error = error;
             this.hideLoader();
             this.openSnackBar(error);
@@ -61,22 +72,22 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.getWordsSubscription ? this.getWordsSubscription.unsubscribe() : null;
-  }
-
   onWordClick(event: Event, word: string) {
     alert(word);
   }
 
   openSnackBar(message: string, action: string = 'OK') {
     this.snackBar.open(message, action, {
-      duration: 2000,
+      duration: this.delayDialogs,
     });
   }
 
   openBottomSheet() {
-    this.bottomSheet.open(BottomSheetTagCloudDoneComponent);
+    this.bottomSheet.open(BottomSheetTagCloudDoneComponent).afterOpened().subscribe(() => {
+      timer(this.delayDialogs).subscribe((_) => {
+        this.bottomSheet.dismiss();
+      })
+    });
   }
 
   private showLoader() {
