@@ -7,3 +7,11 @@
     height: 100%; 
     width: 100%;
 }
+
+.red_color .mat-icon {
+    color: red;
+}
+
+.red_color .mat-icon.green_color {
+    color: green;
+}

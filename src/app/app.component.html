@@ -7,7 +7,7 @@
   <div class="container">
     <mat-card>
       <mat-chip-list>
-        <mat-chip color="accent" selected><h3>The error is generated randomly when the page is loaded. Probability of its occurrence is 32%.</h3></mat-chip>
+        <mat-chip color="accent" selected><h3>Błąd pobrania pliku ze słowami występuje losowo z prawdopodobieństwem wystąpienia 32%</h3></mat-chip>
       </mat-chip-list>
     </mat-card>
     <mat-card>
@@ -17,7 +17,7 @@
             rowspan="5"
         >
           <mat-list>
-              <mat-list-item *ngFor="let taskRequirement of taskRequirements"><mat-icon>arrow_forward</mat-icon> &nbsp; {{ taskRequirement }}</mat-list-item>
+              <mat-list-item *ngFor="let taskRequirement of taskRequirements; let i = index" ngClass="red_color"><mat-icon [class.green_color]="(checkRequirements[i] | async)">{{ (checkRequirements[i] | async) ? 'done_all' : 'cached' }}</mat-icon> &nbsp; {{ taskRequirement.text }}</mat-list-item>
           </mat-list>
         </mat-grid-tile>
         <mat-grid-tile

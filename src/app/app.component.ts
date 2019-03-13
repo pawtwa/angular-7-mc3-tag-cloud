@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, timer, Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 
@@ -26,7 +26,8 @@ export class AppComponent implements OnInit, OnDestroy {
   words: Object;
   private getWordsSubscription: Subscription;
 
-  taskRequirements: string[];
+  taskRequirements: any[] = [];
+  checkRequirements: Observable<boolean>[] = [];
   error: string;
 
   private delayAfterGetWords: number = 500;
@@ -52,11 +53,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.error = null;
     timer(0).subscribe((_) => {
       this.showLoader();
+      this.checkRequirements.length = taskRequirements.length;
       this.taskRequirements = taskRequirements;
       this.getWordsSubscription = this.tagCloudService.getWords().subscribe(
         (response: WordsInterface) => {
           timer(this.delayAfterGetWords).subscribe((_) => {
             this.words = response;
+            this.checkWords();
             this.hideLoader();
             this.openBottomSheet();
           });
@@ -70,6 +73,12 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       );
     });
+  }
+
+  checkWords() {
+    for (let i in this.taskRequirements) {
+      this.checkRequirements[i] = this.taskRequirements[i].check$(this.words);
+    }
   }
 
   onWordClick(event: Event, word: string) {

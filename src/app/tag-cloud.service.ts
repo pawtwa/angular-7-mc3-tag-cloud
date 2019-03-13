@@ -51,17 +51,17 @@ export class TagCloudService {
   }
 
   private handleGenerateGaussianError(error: string) {
-    return throwError('An error occurred: ' + error);
+    return throwError('Wystąpił błąd: ' + error);
   };
 
   private handleGetFileError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
-      console.error('An error occurred:', error.error.message);
+      console.error('Wystąpił błąd:', error.error.message);
     } else {
       console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `Serwer zwrócił błąd ${error.status}, ` +
+        `odpowiedź: ${error.error}`);
     }
-    return throwError('Something bad happened :( Please try again later.');
+    return throwError('Wydarzyło się coś niepokojącego :( Proszę spróbować ponownie za chwilę.');
   };
 }
